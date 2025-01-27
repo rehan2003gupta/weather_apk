@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+        <div class="card">
+            <div class="heading">
+            <h2 class="heads">Weather Report</h2>
+        </div>
+        <div class="location">
+            <input type="text" placeholder="Enter location.....">
+        </div>
+        <button class="submit">
+            Submit
+    </button>
+    </div>
+    <script>
+        document.querySelector(".submit").addEventListener("click", () => {
+            const locationInput = document.querySelector("input").value.trim(); // Get the input value
+            const apiKey = "c4a4f16229484c7eb52182327252501"; // Your API key
+            const apiUrl = `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${locationInput}&aqi=yes`;
+    
+            if (locationInput) {
+                fetch(apiUrl)
+                    .then((response) => {
+                        if (response.status === 200) {
+                            return response.json(); // Convert response to JSON
+                        } else {
+                            throw new Error("Location not found or an error occurred.");
+                        }
+                    })
+                    .then((data) => {
+                        // Display weather data
+                        const { location, current } = data;
+                        alert(`
+                            Weather Report for ${location.name}, ${location.region}, ${location.country}
+                            - Temperature: ${current.temp_c}°C
+                            - Condition: ${current.condition.text}
+                            - Humidity: ${current.humidity}%
+                            - Wind: ${current.wind_kph} km/h
+                            - Air Quality Index (AQI): ${current.air_quality.pm2_5.toFixed(2)}
+                        `);
+                    })
+                    .catch((error) => {
+                        alert(error.message);
+                    });
+            } else {
+                alert("Please enter a location.");
+            }
+        });
+    </script>
+    
+</body>
+</html>
